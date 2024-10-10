@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //asigna la id del fragment al SupportMapFragment
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapView);
         mapFragment.getMapAsync(this);
 
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         checkLocationPermission();
     }
 
+    //verifica si se ha concedido el permiso de ubicación, y lo solicita si no es así
     private void checkLocationPermission() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_PERMISSION_REQUEST_CODE);
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    //obtiene la ubicación actual del dispositivo y coloca un marcador en el mapa
     private void getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             return;
@@ -56,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onSuccess(Location location) {
                 if(location != null){
+
                     LatLng currentLatLng = new LatLng(location.getLatitude(),location.getLongitude());
                     mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng,15));
                     mapa.addMarker(new MarkerOptions().position(currentLatLng).title("Ubicación actual"));
@@ -64,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-
+    //Método llamado cuando el mapa está listo para ser utilizado
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mapa = googleMap;
@@ -74,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapa.setMyLocationEnabled(true);
     }
 
+    //Maneja los resultados de la solicitud de permisos.
     public void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == LOCATION_PERMISSION_REQUEST_CODE){
